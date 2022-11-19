@@ -5,7 +5,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"log"
 	"simple-fiber-crm/database"
 	"simple-fiber-crm/lead"
 )
@@ -14,7 +13,7 @@ func setUpRoutes(app *fiber.App) {
 	app.Get("/api/v1/leads", lead.GetLeads)
 	app.Get("/api/v1/leads/:id", lead.GetLead)
 	app.Post("/api/v1/leads", lead.CreateLead)
-	app.Delete("/api/v1/lead/:id", lead.DeleteLead)
+	app.Delete("/api/v1/leads/:id", lead.DeleteLead)
 }
 
 func initDB() {
@@ -42,9 +41,7 @@ func main() {
 
 	setUpRoutes(app)
 
-	go func() {
-		log.Fatal(app.Listen(":8000"))
-	}()
+	app.Listen(":8000")
 
 	//defer database.DB.Close()
 }

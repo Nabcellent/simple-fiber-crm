@@ -62,5 +62,5 @@ func DeleteLead(c *fiber.Ctx) error {
 
 	db.Delete(&lead)
 
-	return c.Status(http.StatusAccepted).JSON("Lead successfully deleated")
+	return c.Status(http.StatusAccepted).JSON("Lead successfully deleted")
 }
