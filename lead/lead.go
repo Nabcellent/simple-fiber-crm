@@ -15,19 +15,16 @@ type Lead struct {
 	Company string `json:"company"`
 }
 
-func GetLeads(c *fiber.Ctx) {
+func GetLeads(c *fiber.Ctx) error {
 	db := database.DB
 
 	var leads []Lead
 
 	db.Find(&leads)
 
-	err := c.JSON(leads)
-	if err != nil {
-		return
-	}
+	return c.JSON(leads)
 }
-func GetLead(c *fiber.Ctx) {
+func GetLead(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	db := database.DB
@@ -36,29 +33,22 @@ func GetLead(c *fiber.Ctx) {
 
 	db.Find(&lead, id)
 
-	err := c.JSON(lead)
-	if err != nil {
-		return
-	}
+	return c.JSON(lead)
 }
-func CreateLead(c *fiber.Ctx) {
+func CreateLead(c *fiber.Ctx) error {
 	db := database.DB
 
 	lead := new(Lead)
 
 	if err := c.BodyParser(lead); err != nil {
-		c.Status(http.StatusBadRequest).JSON(err)
-		return
+		return c.Status(http.StatusBadRequest).JSON(err)
 	}
 
 	db.Create(&lead)
 
-	err := c.JSON(lead)
-	if err != nil {
-		return
-	}
+	return c.JSON(lead)
 }
-func DeleteLead(c *fiber.Ctx) {
+func DeleteLead(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := database.DB
 
@@ -67,11 +57,10 @@ func DeleteLead(c *fiber.Ctx) {
 	db.Find(&lead, id)
 
 	if lead.Name == "" {
-		c.Status(http.StatusNotFound).JSON("Lead Not Found.")
-		return
+		return c.Status(http.StatusNotFound).JSON("Lead Not Found.")
 	}
 
 	db.Delete(&lead)
 
-	c.Status(http.StatusAccepted).JSON("Lead successfully deleated")
+	return c.Status(http.StatusAccepted).JSON("Lead successfully deleated")
 }
